@@ -5,6 +5,7 @@ import { config } from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan';
 import errorMiddleware from './midlewares/error.middleware.js';
+import userRoutes from './routes/user.routes.js';
 
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: [process.env.FRONTEND_URL],
+    methods:["GET","POST","PUT","DELETE","PATCH"],
     credentials: true,
   })
 );
@@ -24,6 +26,8 @@ app.use(cookieParser());
 app.get('/ping', (_req, res) => {
   res.send('Pong');
 });
+
+app.use('/api/v1/user', userRoutes);
 
 
 
