@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema({
+    name:{
+        type:String,
+        required:[true,"Name is Required"],
+        trim:true,
+    },
     email:{
         type:String,
         required:[true,"Email is Required"],
@@ -11,15 +16,7 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:[true,"Password is Required"],
     },
-    firstName:{
-        type:String,
-        required:false,
-    },
-    lastName:{
-        type:String,
-        required:false,
-    },
-    avatar: {
+    profile_pic: {
         public_id: {
           type: String,
         },
@@ -27,21 +24,11 @@ const userSchema = new mongoose.Schema({
           type: String,
         },
     },
-    profileSetup:{
-        type:Boolean,
-        default:false,
-    },
 },{
     timestamps:true
 });
 
-userSchema.pre('save',async function(next){
-    if(!this.isModified('password')){
-        next();
-    }
-    this.password = await bcrypt.hash(this.password,12);
-    next();
-});
+
 
 
 const user = mongoose.model('User',userSchema);
