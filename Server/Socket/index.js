@@ -41,7 +41,7 @@ io.on('connection', async(socket) => {
 
   socket.on('message-page', async(userId) => {
 
-    console.log("message-page", userId);
+    //console.log("message-page", userId);
 
     const user = await User.findById(userId).select("-password");
 
@@ -55,7 +55,19 @@ io.on('connection', async(socket) => {
     
     socket.emit('message-user', payload);
     
-  });
+    const getConversation = await ConversationModel.findOne({
+      $or: [
+        { sender : user?._id , reciver : userId},
+        { sender : userId , reciver : user?._id}
+      ]
+    }).populate('messages').sort({updatedAt : -1})
+
+    
+    socket.emit('message',getConversation.messages)
+
+  })
+
+  
 
   socket.on('new-messgae', async(data) => {
 
